@@ -1,6 +1,6 @@
 mqtt:
   base_topic: zigbee2mqtt
-  server: mqtt://mqtt
+  server: mqtt://mosquitto
 serial:
   port: /dev/ttyUSB0
   adapter: ember
