@@ -3,40 +3,43 @@ Use Raspberry Pi Imager to install the Ubuntu Server LTS on the Pi, upload your 
 # Step 1 Update system
 ```bash
 sudo apt update && sudo apt upgrade -y
-
+```
 ## Step 2 Install Docker
 Install required dependencies, add Docker's official GPG key and repository, then install Docker:
-```bash 
-# Install prerequisites
+### Install prerequisites
+```bash
 sudo apt install -y ca-certificates curl gnupg
-
-# Add Docker's GPG key
+```
+### Add Docker's GPG key
+```bash
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
   sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
-# Add the Docker repository
+```
+### Add the Docker repository
+```bash
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
   https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-# Install Docker Engine
+```
+### Install Docker Engine
+```bash
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
-Enable and start Docker
+### Enable and start Docker
 ```bash 
 sudo systemctl start docker
 sudo systemctl enable docker
 ```
-(Optional) Run Docker without sudo
+### (Optional) Run Docker without sudo
 ```bash
 sudo gpasswd -a $USER docker
 newgrp docker
 ```
-Then verify: ```bash docker --version```
+#### Then verify: ```bash docker --version```
 
 
 # Step 3: Identify Your Zigbee Adapter
@@ -55,7 +58,8 @@ Create a working directory and the Compose file:​
 ```bash
 mkdir -p ~/zigbee2mqtt && cd ~/zigbee2mqtt
 mkdir -p zigbee2mqtt-data mosquitto-data
-nano docker-compose.yml```
+nano docker-compose.yml
+```
 
 Paste the following into docker-compose.yml, replacing <DEVICENAME>, <ADAPTERTYPE>, and <TIMEZONE> with your values:​
 ```yaml
