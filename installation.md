@@ -99,7 +99,7 @@ mqtt:
 
 serial:
   port: /dev/ttyUSB0          # ← your device path
-  adapter: zstack             # ← your adapter type
+  adapter: ember             # ← your adapter type
 
 frontend:
   port: 8080

@@ -3,12 +3,13 @@
 ## Zigbee2MQTT server portal http://10.0.0.31:8080
 
 ## ssh config
+```ssh-config
 Host pi
   HostName pi.local
   User mdelgado9286
   IdentityFile ~/.ssh/id_ed25519
   ForwardAgent yes
-
+```
 # Docker cheatsheet
 Build images
 ```bash
