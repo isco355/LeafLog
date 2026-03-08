@@ -1,8 +1,9 @@
-OS image Ubuntu Server LTS
-
-## Step 1 Update system
+# OS image Ubuntu Server LTS
+Use Raspberry Pi Imager to install the Ubuntu Server LTS on the Pi, upload your public keys when setting up the image.
+# Step 1 Update system
 ```bash
-sudo apt update && sudo apt upgrade -y```
+sudo apt update && sudo apt upgrade -y
+
 ## Step 2 Install Docker
 Install required dependencies, add Docker's official GPG key and repository, then install Docker:
 ```bash 
