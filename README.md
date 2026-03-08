@@ -12,18 +12,23 @@ Host pi
 # Docker cheatsheet
 Build images
 ```bash
-docker compose build ```
+docker compose build
+```
 Run docker containers in the background
 ```bash
-docker compose up -d```
+docker compose up -d
+```
 Watch containers
 ```bash 
-watch -n 0.1 docker ps```
+watch -n 0.1 docker ps
+```
 Monitor a container like zigbee2mqtt
 ```bash
-docker compose logs -f zigbee2mqtt```
+docker compose logs -f zigbee2mqtt
+```
 
 # Misc useful commands
 restart ssh agent
 ```bash
-eval "$(ssh-agent -s)"```
+eval "$(ssh-agent -s)"
+```
