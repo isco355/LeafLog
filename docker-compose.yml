@@ -58,6 +58,8 @@ services:
     build: ./dashboard
     container_name: dash_dashboard
     restart: unless-stopped
+    volumes:
+      - ./dashboard:/app
     depends_on:
       - postgres
     ports:
@@ -67,5 +69,14 @@ services:
       DB_NAME: zigbee_db
       DB_USER: zigbee_user
       DB_PASSWORD: zigbee_pass
+  svelte-dev:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    volumes:
+      - ./ui:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
 volumes:
   pgdata:
