@@ -51,12 +51,6 @@
 
       <div class="relative">
         <div
-          class="w-12 h-12 rounded-full bg-emerald-500/15
-                 flex items-center justify-center"
-        >
-          <Gauge class="text-emerald-500" size="20" />
-        </div>
-        <div
           class="absolute inset-0 rounded-full animate-pulse bg-emerald-500/10"
         />
       </div>
