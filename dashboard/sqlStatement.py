@@ -24,3 +24,5 @@ CREATE_TABLE_DEVICE="""CREATE TABLE IF NOT EXISTS devices (
     device_id INTEGER NOT NULL,
     device_name TEXT NOT NULL
 );"""
+
+

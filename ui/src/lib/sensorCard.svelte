@@ -24,7 +24,7 @@
   };
 </script>
 
-<a href="/sensor/{sensor.device_name}" class="block group">
+<a href="/dashboard/sensor/{sensor.device_name}" class="block group">
   <div
     class="rounded-3xl border border-outline-variant/30 overflow-hidden
            bg-gradient-to-br from-surface-container-lowest to-surface-container-low

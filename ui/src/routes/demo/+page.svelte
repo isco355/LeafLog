@@ -1,106 +1,101 @@
 <script>
-  import { onMount } from "svelte";
-  import { page } from "$app/state";
+  import { RefreshCw, Home } from "lucide-svelte";
+  let retrying = false;
 
-  import LineChart from "$lib/LineChart.svelte";
-  import Heatmap from "$lib/Heatmap.svelte";
-  import StastOverview from "$lib/StastOverview.svelte";
-
-  let sensor_average = $state(null);
-  let sensor_record = $state(null);
-  let sensor_heatmap = $state(null);
-  let loading = $state(true);
-
-  let sensor_id = $derived(page.params.id);
-
-  const retriveData = async (path, id) => {
-    try {
-      const res = await fetch("http://127.0.0.1:8050/api/device" + path, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ device_name: "device_1" }),
-      });
-
-      if (!res.ok) throw new Error(res.status);
-      return await res.json();
-    } catch (e) {
-      console.error(e);
-      return null;
-    }
-  };
-
-  // 🌿 Derived plant health logic
-  const getPlantStatus = (avg) => {
-    if (!avg) return "unknown";
-
-    const soil = avg?.soil_moisture?.mean ?? 0;
-    const temp = avg?.temperature?.mean ?? 0;
-
-    if (soil < 30) return "dry";
-    if (soil > 80) return "overwatered";
-    if (temp > 35) return "heat_stress";
-
-    return "healthy";
-  };
-
-  onMount(async () => {
-    loading = true;
-
-    const [overview, records, heatmap] = await Promise.all([
-      retriveData("/overview", sensor_id),
-      retriveData("/", sensor_id),
-      retriveData("/heatmap", sensor_id),
-    ]);
-
-    sensor_average = overview;
-    sensor_record = records;
-    sensor_heatmap = heatmap;
-
-    loading = false;
-  });
+  function retry() {
+    retrying = true;
+    setTimeout(() => {
+      retrying = false;
+      window.location.reload();
+    }, 1600);
+  }
 </script>
 
-{#if loading}
-  <p>Loading plant analytics...</p>
-{:else if sensor_record?.raw}
-  <div class="dashboard">
-    <!-- 🌱 Header -->
-    <div class="header">
-      <h1>🌿 Plant Sensor Dashboard</h1>
-      <h3>Device: {sensor_id}</h3>
-      <p>
-        Total Records:
-        {sensor_record.raw?.length ?? 0}
-      </p>
+<div
+  class="min-h-screen flex items-center justify-center bg-[#f6f6f4] relative overflow-hidden text-stone-900"
+>
+  <!-- Ambient background glow -->
+  <div
+    class="absolute w-[600px] h-[600px] bg-emerald-200/30 blur-[140px] rounded-full -top-40 -left-40"
+  ></div>
+  <div
+    class="absolute w-[500px] h-[500px] bg-stone-300/40 blur-[140px] rounded-full -bottom-40 -right-40"
+  ></div>
 
-      <p>
-        Plant Status:
-        <strong>{getPlantStatus(sensor_average)}</strong>
-      </p>
+  <!-- Glass container -->
+  <div
+    class="relative z-10 w-full max-w-md mx-6 rounded-3xl bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl p-10 text-center"
+  >
+    <!-- Title -->
+    <h1 class="text-2xl font-serif tracking-tight mb-2">System Offline</h1>
+
+    <p class="text-sm text-stone-500 mb-10 leading-relaxed">
+      The data ecosystem has temporarily dried out. Rehydration may restore
+      connection.
+    </p>
+
+    <!-- Core visualization -->
+    <div
+      class="relative w-40 h-40 mx-auto mb-10 flex items-center justify-center"
+    >
+      <!-- Outer pulse ring -->
+      <div
+        class={`absolute inset-0 rounded-full transition-all duration-1000
+        ${retrying ? "bg-emerald-200/60 scale-110 animate-pulse" : "bg-stone-200/40 scale-100"}`}
+      ></div>
+
+      <!-- Inner core -->
+      <div
+        class={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-700
+        ${retrying ? "bg-emerald-500 shadow-lg shadow-emerald-200" : "bg-stone-400"}`}
+      >
+        <!-- Icon-like plant mark -->
+        <div
+          class={`w-10 h-10 rounded-full transition-all duration-700
+          ${retrying ? "bg-white scale-110" : "bg-stone-200 scale-90"}`}
+        ></div>
+      </div>
+
+      <!-- floating particles -->
+      <div
+        class={`absolute inset-0 transition-opacity duration-700 ${retrying ? "opacity-100" : "opacity-0"}`}
+      >
+        <div
+          class="absolute w-2 h-2 bg-emerald-400 rounded-full top-6 left-10 animate-bounce"
+        ></div>
+        <div
+          class="absolute w-1.5 h-1.5 bg-emerald-300 rounded-full bottom-8 right-10 animate-bounce"
+        ></div>
+        <div
+          class="absolute w-1 h-1 bg-emerald-500 rounded-full top-10 right-12 animate-bounce"
+        ></div>
+      </div>
     </div>
 
-    <!-- 📊 Overview -->
-    <section>
-      <h2>Sensor Overview</h2>
-      <StastOverview overview={sensor_average} />
-    </section>
+    <!-- Action -->
+    <div class="flex flex-col gap-3">
+      <button
+        on:click={retry}
+        disabled={retrying}
+        class="relative overflow-hidden rounded-full px-6 py-3 bg-stone-900 text-white font-medium transition active:scale-95 disabled:opacity-60"
+      >
+        <div class="flex items-center justify-center gap-2 relative z-10">
+          <RefreshCw class={`w-4 h-4 ${retrying ? "animate-spin" : ""}`} />
+          {retrying ? "Rehydrating..." : "Reconnect System"}
+        </div>
 
-    <!-- 📈 Trends -->
-    <section>
-      <h2>Sensor Trends</h2>
-      <LineChart series={sensor_record.series} />
-    </section>
+        {#if retrying}
+          <div class="absolute inset-0 bg-emerald-500 animate-pulse"></div>
+        {/if}
+      </button>
 
-    <!-- 🔥 Heatmap -->
-    {#if sensor_heatmap}
-      <section>
-        <h2>Soil & Environmental Heatmap</h2>
-        <Heatmap heatmap_data={sensor_heatmap} />
-      </section>
-    {/if}
+      <a
+        href="/"
+        class="flex items-center justify-center gap-2 text-sm text-stone-500 hover:text-stone-900 transition"
+      >
+        <Home class="w-4 h-4" />
+        Return Home
+      </a>
+    </div>
   </div>
-{:else}
-  <p>No sensor data available.</p>
-{/if}
-
-<style></style>
+</div>

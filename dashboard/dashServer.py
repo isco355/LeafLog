@@ -17,7 +17,7 @@ DB_PASS = os.getenv("DB_PASSWORD", "zigbee_pass")
 
 def fetch_data(hours: int = 24) -> pd.DataFrame:
     conn = psycopg2.connect(
-        host=DB_HOST, dbname=DB_NAME, user=DB_USER, password=DB_PASS
+        host=DB_HOST, dbname=DB_NAME, user=DB_USER, password=DB_PASS,    url_base_pathname="/dashboard/"
     )
     df = pd.read_sql(f"""
         SELECT ts, device_name, soil_moisture, humidity,

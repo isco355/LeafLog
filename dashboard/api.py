@@ -1,18 +1,21 @@
 from flask import Blueprint, jsonify, request
 import pandas as pd
-from db import pandaSQL
+from db import pandaSQL,sql,simulatedStatement
+# from sqlStatement import simulatedStatement
 import json
-from dfHelper import tableToSeries,tableToHeatMap,aggPerDevice,correctionMatrix
+from dfHelper import tableToSeries,tableToHeatMap,aggPerDevice,correctionMatrix,tableToHeatMap,propertiesHeatMaps
 
 api = Blueprint("api", __name__, url_prefix="/api")
 
-@api.route("/health")
-def health():
+@api.route("/simulate",methods=["POST"])
+def simulate():
+   try:
 
-   sensors=f"select * from sensor_readings"
-   res = pandaSQL(sensors)
-
-   return res.to_dict(orient='records')
+      simulate_data_sql = simulatedStatement() 
+      return {"state":"ok"}
+   except Exception as e:
+      print(e,flush=True)
+      return {"error":e}
 
 @api.route("/devices/",methods=["POST"])
 def devices():
@@ -20,6 +23,7 @@ def devices():
    res = pandaSQL(sensors)
 
    return res.to_dict(orient='records')
+
 
 @api.route("/devices/latest")
 def lastestStats():
@@ -64,7 +68,7 @@ def deviceRecordHeatMap():
 
    sensors=f"select * from sensor_readings where device_name='{name}' ORDER BY ts DESC"
    df = pandaSQL(sensors)
-   heatmap =tableToHeatMap(df,"soil_moisture")
+   heatmap =propertiesHeatMaps(df)
    corr_heatmap_data = correctionMatrix(df)
    response={"heatmap":heatmap,"correlation": corr_heatmap_data}
    return response

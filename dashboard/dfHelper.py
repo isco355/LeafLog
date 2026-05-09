@@ -1,6 +1,26 @@
 import pandas as pd
 import numpy as np
 
+def getRange(metric):
+    match metric:
+        case "soil_moisture" | "humidity" | "battery":
+            return {"min_val": 0, "max_val": 100}
+        case "temperature":
+            return {"min_val": -40, "max_val": 85}
+        case "linkquality":
+            return {"min_val": 0, "max_val": 255}
+        case _:
+            return {"min_val": None, "max_val": None}
+
+def propertiesHeatMaps(df):
+    columns=list(df.select_dtypes(include='number').drop(columns=['id']).columns)
+
+    heatmaps_list= []
+    for column_name in columns:
+        heatmap = tableToHeatMap(df,column_name)
+        heatmaps_list.append(heatmap)
+    return heatmaps_list
+
 def tableToHeatMap(df,property):
     df['ts'] = pd.to_datetime(df['ts'])
 
@@ -13,6 +33,8 @@ def tableToHeatMap(df,property):
     df['day'] = pd.Categorical(df['day'], categories=day_order, ordered=True)
 
 
+    df[property] =df[property].ewm(span=10, adjust=True).mean().round(2)
+
     heatmap_data = df.pivot_table(
         index='week_start',
         columns='day',
@@ -23,29 +45,24 @@ def tableToHeatMap(df,property):
     heatmap_data = heatmap_data.reindex(columns=day_order)
 
     heatmap_json = heatmap_data.fillna(0).round(2).to_dict("split")
-    heatmap_json['range']={"min_val":0,"max_val":100}
-    # print(heatmap_json,flush=True)
+    range_values = getRange(property)
+    heatmap_json['range']=range_values
     heatmap_json['attribute']=property
 
     return heatmap_json
 
 
 def tableToSeries(df):
-    value_cols = df.select_dtypes(include="number").columns.drop('id')
-    series = [
-    {
-        "name": col,
-        "data": [
-            [
-                int(ts.timestamp() * 1000),
-                val
-            ]
-            for ts, val in zip(df["ts"], df[col])
-        ]
-    }
-    for col in value_cols]
+    df=df.set_index('ts')
+    df=df.select_dtypes(include='number')
+    df=df.drop(columns="id")
 
-    return series
+    df =df.ewm(span=10, adjust=True).mean().round(2)
+    series=df.to_dict(orient='series')
+    json_serializable = [{"name":k,"data": v.reset_index().values.tolist()} for k, v in series.items()]
+
+
+    return json_serializable
 
 def aggPerDevice(df):
     df= df.drop(columns=['id'])
