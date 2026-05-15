@@ -56,6 +56,8 @@ def tableToSeries(df):
     df=df.set_index('ts')
     df=df.select_dtypes(include='number')
     df=df.drop(columns="id")
+    df = df.resample('12H').mean()
+
 
     df =df.ewm(span=10, adjust=True).mean().round(2)
     series=df.to_dict(orient='series')

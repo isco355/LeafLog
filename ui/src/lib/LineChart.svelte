@@ -10,7 +10,6 @@
   } from "lucide-svelte";
 
   const options = [
-    // { value: "line", icon: LineChart, label: "Line" },
     { value: "spline", icon: Waves, label: "Spline" },
     { value: "column", icon: BarChart2, label: "Column" },
     { value: "area", icon: AreaChart, label: "Area" },

@@ -4,21 +4,13 @@
   import SensorCard from "$lib/sensorCard.svelte";
   import StastOverview from "$lib/StastOverview.svelte";
   import Simulated from "$lib/simulated.svelte";
+  import { getDevices } from "$lib/network";
 
   let data = $state([]);
   let error = null;
 
   onMount(async () => {
-    const url = "http://127.0.0.1:8050/api/devices/latest";
-    try {
-      const res = await fetch(url);
-
-      if (!res.ok) throw new Error("Request failed");
-
-      data = await res.json();
-    } catch (err) {
-      error = err.message;
-    }
+    data = await getDevices();
   });
 </script>
 
@@ -28,7 +20,10 @@
   {:else if data.length === 0}
     <Simulated />
   {:else}
-    <StastOverview overview={data["overview"]} />
+    <StastOverview
+      title={"All Sensors Summarize"}
+      overview={data["overview"]}
+    />
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {#each data["records"] as sensor_data}

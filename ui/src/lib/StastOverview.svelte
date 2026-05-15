@@ -7,7 +7,7 @@
     Thermometer,
   } from "lucide-svelte";
 
-  const { overview } = $props();
+  const { overview, title } = $props();
 
   const formatLabel = (key) =>
     key.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -22,8 +22,9 @@
 </script>
 
 <main>
-  <h1>Sensor Overview</h1>
-
+  <h1 class="text-center text-3xl font-bold">
+    {title}
+  </h1>
   <div class="grid">
     {#each Object.entries(overview) as [key, value]}
       <div class="card">

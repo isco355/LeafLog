@@ -27,15 +27,17 @@
 {#await sensor_average}
   <p>loading</p>
 {:then value}
-  {#if Object.hasOwn(sensor_record, "raw")}
-    <h3 class="text-2xl font-bold">
-      Device Name: {sensor_id}, total records: {sensor_record["raw"].length}
-    </h3>
-  {/if}
   {#if sensor_analyzer}
     <div class="flex flex-colum gap-20 items-center justify-center">
       <div class="flex flex-col gap-10">
-        <StastOverview overview={sensor_average} />
+        <StastOverview
+          title={`Sensor Overview: ${sensor_id}`}
+          overview={sensor_average}
+        />
+
+        <h1 class="text-xl font-bold text-center">
+          Total Records: {sensor_record["raw"].length}
+        </h1>
         <LineChart series={sensor_record["series"]} />
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {#each sensor_analyzer["heatmap"] as heatmap_data}
@@ -43,10 +45,12 @@
           {/each}
         </div>
         <div class="flex flex-col w-2/5 gap-2 overflow-auto">
-          <h1>LOGS</h1>
-          {#each sensor_record["raw"] as record_data}
-            <RecordCard record={record_data} />
-          {/each}
+          <!-- <h1 class="text-xl font-bold text-center"> -->
+          <!--   Total Records: {sensor_record["raw"].length} -->
+          <!-- </h1> -->
+          <!-- {#each sensor_record["raw"] as record_data} -->
+          <!--   <RecordCard record={record_data} /> -->
+          <!-- {/each} -->
         </div>
       </div>
     </div>
