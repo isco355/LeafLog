@@ -3,8 +3,9 @@ from flask import Flask
 from api import api
 from dashServer import createDash
 
+from flask_cors import CORS
 server = Flask(__name__)
-
+CORS(server)
 server.register_blueprint(api)
 dash_app = createDash(server)
 

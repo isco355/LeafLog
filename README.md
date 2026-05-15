@@ -1,35 +1,21 @@
-# Farmer-friendly dashboards project
+# LeafLog By Miguel Degaldo and Francisco O.P.
 
-## Zigbee2MQTT server portal http://10.0.0.31:8080
+## Installation
 
-## ssh config
-```ssh-config
-Host pi
-  HostName pi.local
-  User mdelgado9286
-  IdentityFile ~/.ssh/id_ed25519
-  ForwardAgent yes
-```
-# Docker cheatsheet
-Build images
-```bash
-docker compose build
-```
-Run docker containers in the background
-```bash
-docker compose up -d
-```
-Watch containers
-```bash 
-watch -n 0.1 docker ps
-```
-Monitor a container like zigbee2mqtt
-```bash
-docker compose logs -f zigbee2mqtt
-```
+Setup guide and notes:
 
-# Misc useful commands
-restart ssh agent
-```bash
-eval "$(ssh-agent -s)"
-```
+- https://installation.me
+
+---
+
+## Service portals
+
+| Service | URL / Access | Port | Notes |
+|---|---|---|---|
+| Zigbee2MQTT | http://localhost:8080 | `8080` | Zigbee dashboard |
+| Mosquitto WebSocket | `ws://localhost:9001` | `9001` | MQTT over WebSocket |
+| PostgreSQL | http:localhost:5432 | `5432` | Database access |
+| Dash Dashboard | http://localhost:8050 | `8050` | Backend |
+| Svelte Frontend | http://localhost:5173 | `5173` | Website |
+
+
